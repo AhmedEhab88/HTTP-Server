@@ -6,13 +6,14 @@ import (
 )
 
 func main() {
-	ln, err := net.Listen("tcp4", ":8080")
+	listener, err := net.Listen("tcp4", ":8080")
 	fmt.Println("Listening on 8080...")
 	if err != nil {
 		fmt.Printf("Error occured while listening. %v", err)
 	}
+	defer listener.Close()
 	for {
-		conn, err := ln.Accept()
+		conn, err := listener.Accept()
 		if err != nil {
 			fmt.Printf("Error occured when Accepting. %v", err)
 		}
