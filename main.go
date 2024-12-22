@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"strings"
 )
 
 func main() {
@@ -36,6 +37,16 @@ func handleConnection(connection net.Conn) {
 		return
 	}
 
-	// Print the incoming data
-	fmt.Printf("Received: %s", buf)
+	data := string(buf)
+	request := strings.Split(data, "\r\n")
+	requestSplitted := strings.Split(request[0], " ")
+
+	result := fmt.Sprintf("HTTP/1.1 200 OK\r\n\r\nRequested path: %s\r\n", requestSplitted[1])
+
+	_, err = connection.Write([]byte(result))
+
+	if err != nil {
+		fmt.Printf("Error while writing to connection: %s", err)
+	}
+
 }
